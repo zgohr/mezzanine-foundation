@@ -1,0 +1,34 @@
+{% load mezzanine_tags i18n future %}
+<form action="{% url "search" %}">
+
+<div class="row collapse">
+    <div class="small-6 columns">
+    <input class="search-query" placeholder="{% trans "Search" %}" type="text" name="q" value="{{ request.REQUEST.q }}">
+    </div>
+
+{% if search_model_choices %}
+    <div class="small-4 columns">
+    {% if search_model_choices|length == 1 %}
+    <input type="hidden" name="type" value="{{ search_model_choices.0.1 }}">
+    {% else %}
+    <select name="type">
+        <option value="">{% trans "Everything" %}</option>
+        {% for verbose_name, model in search_model_choices %}
+        <option value="{{ model }}"
+            {% if model == request.REQUEST.type  %}selected{% endif %}>
+            {{ verbose_name }}
+        </option>
+        {% endfor %}
+    </select>
+    {% endif %}
+    </div>
+{% endif %}
+
+<div class="small-2 column">
+<input type="submit" class="button postfix" value="{% trans "Go" %}">
+</div>
+
+</div> <!-- row-collapse -->
+
+
+</form>

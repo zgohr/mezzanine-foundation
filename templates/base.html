@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="{{ LANGUAGE_CODE }}" {% if LANGUAGE_BIDI %}dir="rtl"{% endif %}>
+{% load pages_tags mezzanine_tags i18n future %}
+<head>
+
+<meta http-equiv="Content-type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width">
+<meta name="keywords" content="{% block meta_keywords %}{% endblock %}">
+<meta name="description" content="{% block meta_description %}{% endblock %}">
+<title>{% block meta_title %}{% endblock %}{% if settings.SITE_TITLE %} | {{ settings.SITE_TITLE }}{% endif %}</title>
+<link rel="shortcut icon" href="{{ STATIC_URL }}img/favicon.ico">
+
+{% ifinstalled mezzanine.blog %}
+<link rel="alternate" type="application/rss+xml" title="RSS" href="{% url "blog_post_feed" "rss" %}">
+<link rel="alternate" type="application/atom+xml" title="Atom" href="{% url "blog_post_feed" "atom" %}">
+{% endifinstalled %}
+
+{% compress css %}
+<link rel="stylesheet" href="{{ STATIC_URL }}style.css">
+<link rel="stylesheet" href="{{ STATIC_URL }}css/mezzanine.css">
+{% if LANGUAGE_BIDI %}
+<link rel="stylesheet" href="{{ STATIC_URL }}css/rtl.css">
+{% endif %}
+{% ifinstalled cartridge.shop %}
+<link rel="stylesheet" href="{{ STATIC_URL }}css/cartridge.css">
+{% endifinstalled %}
+{% block extra_css %}{% endblock %}
+{% endcompress %}
+
+{% compress js %}
+<script src="{{ STATIC_URL }}mezzanine/js/{{ settings.JQUERY_FILENAME }}"></script>
+<script src="{{ STATIC_URL }}js/foundation/foundation.js"></script>
+<script src="{{ STATIC_URL }}js/foundation/foundation.topbar.js"></script>
+{% block extra_js %}{% endblock %}
+{% endcompress %}
+<!--[if lt IE 9]>
+<script src="{{ STATIC_URL }}js/html5shiv.js"></script>
+<![endif]-->
+
+{% block extra_head %}{% endblock %}
+
+</head>
+<body id="{% block body_id %}body{% endblock %}">
+
+    <nav class="top-bar">
+        <ul class="title-area">
+            <li class="name">
+            {% if settings.SITE_TITLE %}<h1><a class="brand" href="/">{{ settings.SITE_TITLE }}</a></h1>{% endif %}
+            </li>
+            <li class="tagline">
+            {% if settings.SITE_TAGLINE %}<p class="tagline">{{ settings.SITE_TAGLINE }}</p>{% endif %}
+            </li>
+            <li class="toggle-topbar menu-icon"><a href="#"><span>Menu</span></a></li>
+        </ul>
+        <section class="top-bar-section">
+        {% page_menu "pages/menus/dropdown.html" %}
+        <ul class="right">
+            <li class="has-form">
+            {% search_form "all" %}
+            </li>
+        </ul>
+        </section>
+    </nav>
+
+{% nevercache %}
+{% for message in messages %}
+<div class="alert alert-{{ message.tags }}" data-alert="alert">
+<a class="close" href="#" onclick="$(this).parent().fadeOut('fast'); return false;">×</a>{{ message }}
+</div>
+{% endfor %}
+{% endnevercache %}
+
+
+<div class="row">
+<div class="large-12 columns">
+<h1>{% block title %}{% endblock %}</h1>
+    <ul class="breadcrumbs">
+    {% spaceless %}
+    {% block breadcrumb_menu %}{% page_menu "pages/menus/breadcrumb.html" %}{% endblock %}
+    {% endspaceless %}
+    </ul>
+</div>
+</div>
+
+<div class="row">
+
+<div class="left-column">
+    <ul class="nav-panel">
+        {% block left_panel %}
+        {% page_menu "pages/menus/tree.html" %}
+        {% endblock %}
+    </ul>
+</div>
+
+<div class="main-block">
+    {% block main %}{% endblock %}
+</div>
+
+<div class="right-column">
+    {% nevercache %}
+    {% include "includes/user_panel.html" %}
+    {% endnevercache %}
+    <div class="right-panel">
+    {% block right_panel %}
+    {% ifinstalled mezzanine.twitter %}
+    {% include "twitter/tweets.html" %}
+    {% endifinstalled %}
+    {% endblock %}
+    </div>
+</div>
+
+</div>
+
+<footer>
+<div class="footer">
+{% page_menu "pages/menus/footer.html" %}
+</div>
+</footer>
+
+<div class="power">
+<div class="text">
+<p>
+    {% trans "Powered by" %}
+    <a href="http://mezzanine.jupo.org">Mezzanine</a>{% ifinstalled cartridge.shop %},
+    <a href="http://cartridge.jupo.org">Cartridge</a>{% endifinstalled %}
+    {% trans "and" %}
+    <a href="http://www.djangoproject.com">Django</a>
+    <span class="separator">|</span>
+    {% trans "Theme by" %} <a href="http://foundation.zurb.com/">Foundation</a>
+    {% ifinstalled mezzanine.mobile %}
+    <span class="separator">|</span>
+    <a href="{% url "set_device" "mobile" %}?next={{ request.path }}">{% trans "View Mobile Site" %}</a>
+    {% endifinstalled %}
+</p>
+</div>
+
+{% include "includes/footer_scripts.html" %}
+<script>
+    $(document).foundation();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,74 @@
+@import "foundation.scss";
+
+ul.title-area {
+    @include inline-list;
+    margin: 0;
+    .name {
+        margin-left: 1.375em;
+    }
+    .tagline {
+        opacity: .8;
+        margin-top: emCalc(10px);
+        margin-left: 0;
+    }
+}
+
+div.main-block {
+    @include grid-column(6, $float:left);
+}
+
+ul.tweets, ul.tags, ul.categories, ul.authors, ul.recent-posts, ul.archive {
+    list-style-type: none;
+}
+
+nav.top-bar {
+    .button {
+        padding-top: 0;
+    }
+    select {
+        margin-left: 4%;
+        width: 92%;
+        margin-top: emCalc(11px);
+        border: 1px solid #ddd;
+        height: emCalc(40px);
+    }
+}
+
+div.right-column {
+    @include grid-column(3, $float:left);
+    div.right-panel {
+        @include radius;
+        @include panel($padding: emCalc(15px));
+    }
+}
+
+div.left-column {
+    @include grid-column(3, $float:left);
+    ul.nav-panel {
+        @include radius;
+        @include side-nav($side-nav-divider-color, $side-nav-font-size, $side-nav-link-color);
+        // Workaround to side-nav setting active
+        // of any anchor tag in sub lists
+        li.inactive > a {
+            color: $side-nav-link-color;
+        }
+        @include panel($padding: emCalc(15px));
+        .sub-list {
+            list-style-type: none;
+        }
+    }
+}
+
+footer {
+    @include grid-row;
+    .footer {
+        @include grid-column(6, $center:true);
+    }
+}
+
+div.power {
+    @include grid-row;
+    .text {
+        @include grid-column(6, $center:true);
+    }
+}
