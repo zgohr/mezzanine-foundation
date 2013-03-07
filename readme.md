@@ -10,6 +10,8 @@ At this point, I recommend using the SASS gem and GruntJS to watch your ```style
 
 When overriding Mezzanine templates, make sure to check mezzanine-foundation for its overrides before going to Mezzanine itself.
 
+![screen shot](https://github.com/zgohr/mezzanine-foundation/raw/master/docs/ss.png)
+
 Example package.json and Gruntfile to get you started
 
 ```
