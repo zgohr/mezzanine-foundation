@@ -22,6 +22,7 @@ ul.tweets, ul.tags, ul.categories, ul.authors, ul.recent-posts, ul.archive {
 }
 
 nav.top-bar {
+    margin-bottom: emCalc(40px);
     .button {
         padding-top: 0;
     }
