@@ -6,10 +6,11 @@
 <ul class="right">
     {% for page in page_branch %}
     {% if not has_home and page.is_primary and forloop.first %}
+    <li class="divider"></li>
     <li class="{% if on_home %} active{% endif %}" id="dropdown-menu-home">
         <a href="{% url "home" %}">{% trans "Home" %}</a>
     </li>
-    <li class="divider hide-for-small"></li>
+    <li class="divider"></li>
     {% endif %}
     {% if page.in_menu %}
 
@@ -22,7 +23,7 @@
         {% if page.has_children_in_menu %}{% page_menu page %}{% endif %}
     </li>
 
-    <li class="divider hide-for-small"></li>
+    <li class="divider"></li>
     {% endif %}
     {% endfor %}
 </ul>
