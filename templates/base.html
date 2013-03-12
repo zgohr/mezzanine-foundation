@@ -119,21 +119,22 @@
 </footer>
 
 <div class="power">
-<div class="text">
-<p>
-    {% trans "Powered by" %}
-    <a href="http://mezzanine.jupo.org">Mezzanine</a>{% ifinstalled cartridge.shop %},
-    <a href="http://cartridge.jupo.org">Cartridge</a>{% endifinstalled %}
-    {% trans "and" %}
-    <a href="http://www.djangoproject.com">Django</a>
-    <span class="separator">|</span>
-    {% trans "Theme by" %} <a href="http://foundation.zurb.com/">Foundation</a>
-    {% ifinstalled mezzanine.mobile %}
-    <span class="separator">|</span>
-    <a href="{% url "set_device" "mobile" %}?next={{ request.path }}">{% trans "View Mobile Site" %}</a>
-    {% endifinstalled %}
-</p>
-</div>
+    <div class="text">
+        <p>
+            {% trans "Powered by" %}
+            <a href="http://mezzanine.jupo.org">Mezzanine</a>{% ifinstalled cartridge.shop %},
+            <a href="http://cartridge.jupo.org">Cartridge</a>{% endifinstalled %}
+            {% trans "and" %}
+            <a href="http://www.djangoproject.com">Django</a>
+            <span class="separator">|</span>
+            {% trans "Theme by" %} <a href="http://foundation.zurb.com/">Foundation</a>
+            {% ifinstalled mezzanine.mobile %}
+            <span class="separator">|</span>
+            <a href="{% url "set_device" "mobile" %}?next={{ request.path }}">{% trans "View Mobile Site" %}</a>
+            {% endifinstalled %}
+        </p>
+    </div> <!-- text -->
+</div> <!-- power -->
 
 {% include "includes/footer_scripts.html" %}
 <script>
