@@ -6,7 +6,7 @@
   Foundation.libs.section = {
     name: 'section',
 
-    version : '4.0.4',
+    version : '4.0.5',
 
     settings : {
       deep_linking: false,
@@ -41,7 +41,22 @@
 
       $(window).on('resize.fndtn.section', self.throttle(function () {
         self.resize.call(this);
-      }, 30)).trigger('resize');
+      }, 30))
+      .on('hashchange', function () {
+        if (!self.settings.toggled){
+          self.set_active_from_hash();
+          $(this).trigger('resize');
+        }
+      }).trigger('resize');
+
+      $(document).on('click.fndtn.section', function (e) {
+        if ($(e.target).closest('.title').length < 1) {
+          $('[data-section].vertical-nav, [data-section].horizontal-nav')
+            .find('section, .section')
+            .removeClass('active')
+            .attr('style', '');
+        }
+      });
 
       this.settings.init = true;
     },
@@ -52,6 +67,7 @@
           content = section.find('.content'),
           parent = section.closest('[data-section]'),
           self = Foundation.libs.section;
+      self.settings.toggled = true;
 
       if (!self.settings.deep_linking && content.length > 0) {
         e.preventDefault();
@@ -67,23 +83,33 @@
             .attr('style', '');
         }
       } else {
-        if (self.small(parent) || self.settings.one_up) {
-          $this
-            .closest('[data-section]')
-            .find('section, .section')
-            .removeClass('active')
-            .attr('style', '');
+        var prev_active_section = null,
+            title_height = self.outerHeight(section.find('.title'));
 
-          section.css('padding-top', self.outerHeight(section.find('.title')) - 1);
+        if (self.small(parent) || self.settings.one_up) {
+          prev_active_section = $this.closest('[data-section]').find('section.active, .section.active');
+
+          if (self.small(parent)) {
+            prev_active_section.attr('style', '');
+          } else {
+            prev_active_section.attr('style', 'visibility: hidden; padding-top: '+title_height+'px;');
+          }
         }
 
         if (self.small(parent)) {
           section.attr('style', '');
+        } else {
+          section.css('padding-top', title_height);
         }
 
         section.addClass('active');
+        if (prev_active_section !== null) {
+          prev_active_section.removeClass('active').attr('style', '');
+        }
       }
-
+      setTimeout(function () {
+        self.settings.toggled = false;
+      }, 300);
       self.settings.callback();
     },
 
@@ -109,19 +135,21 @@
           if (self.small($this)) {
             first.attr('style', '');
           } else {
-            first.css('padding-top', self.outerHeight(first.find('.title')) - 1);
+            first.css('padding-top', self.outerHeight(first.find('.title')));
           }
         }
 
         if (self.small($this)) {
           active_section.attr('style', '');
         } else {
-          active_section.css('padding-top', self.outerHeight(active_section.find('.title')) - 1);
+          active_section.css('padding-top', self.outerHeight(active_section.find('.title')));
         }
         self.position_titles($this);
 
-        if (self.is_horizontal($this)) {
+        if (self.is_horizontal($this) && !self.small($this)) {
           self.position_content($this);
+        } else {
+          self.position_content($this, false);
         }
       });
     },
@@ -149,6 +177,10 @@
 
         if (hash.length > 0 && self.settings.deep_linking) {
           section
+            .find('section, .section')
+            .attr('style', '')
+            .removeClass('active');
+          section
             .find('.content[data-slug="' + hash + '"]')
             .closest('section, .section')
             .addClass('active');
@@ -163,6 +195,7 @@
 
       if (typeof off === 'boolean') {
         titles.attr('style', '');
+
       } else {
         titles.each(function () {
           $(this).css('left', previous_width);
@@ -172,14 +205,29 @@
     },
 
     position_content : function (section, off) {
-        var title = section.find('.title'),
-            content = section.find('.content');
-        
-        if (typeof off === 'boolean') {
-          content.attr('style', '');
+      var titles = section.find('.title'),
+          content = section.find('.content'),
+          self = this;
+
+      if (typeof off === 'boolean') {
+        content.attr('style', '');
+        section.attr('style', '');
+      } else {
+        section.find('section, .section').each(function () {
+          var title = $(this).find('.title'),
+              content = $(this).find('.content');
+
+          content.css({left: title.position().left - 1, top: self.outerHeight(title) - 2});
+        });
+
+        // temporary work around for Zepto outerheight calculation issues.
+        if (typeof Zepto === 'function') {
+          section.height(this.outerHeight(titles.first()));
         } else {
-          content.css({left: title.position().left, top: title.outerHeight()});
+          section.height(this.outerHeight(titles.first()) - 2);
         }
+      }
+
     },
 
     small : function (el) {
